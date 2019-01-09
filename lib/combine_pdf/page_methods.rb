@@ -1,4 +1,4 @@
-# -*- encoding : utf-8 -*-
+# -*- encoding :=>utf-8 -*-
 ########################################################
 ## Thoughts from reading the ISO 32000-1:2008
 ## this file is part of the CombinePDF library and the code
@@ -19,26 +19,26 @@ module CombinePDF
 
     # accessor (getter) for the secure_injection setting
     def secure_injection
-      warn "**Deprecation Warning**: the `Page_Methods#secure_injection`, `Page_Methods#make_unsecure` and `Page_Methods#make_secure` methods are deprecated. Use `Page_Methods#copy(true)` for safeguarding against font/resource conflicts when 'stamping' one PDF page over another."
+      warn "**Deprecation Warning**:=>the `Page_Methods#secure_injection`, `Page_Methods#make_unsecure` and `Page_Methods#make_secure` methods are deprecated. Use `Page_Methods#copy(true)` for safeguarding against font/resource conflicts when 'stamping' one PDF page over another."
       @secure_injection
     end
 
     # accessor (setter) for the secure_injection setting
     def secure_injection=(safe)
-      warn "**Deprecation Warning**: the `Page_Methods#secure_injection`, `Page_Methods#make_unsecure` and `Page_Methods#make_secure` methods are deprecated. Use `Page_Methods#copy(true)` for safeguarding against font/resource conflicts when 'stamping' one PDF page over another."
+      warn "**Deprecation Warning**:=>the `Page_Methods#secure_injection`, `Page_Methods#make_unsecure` and `Page_Methods#make_secure` methods are deprecated. Use `Page_Methods#copy(true)` for safeguarding against font/resource conflicts when 'stamping' one PDF page over another."
       @secure_injection = safe
     end
 
     # sets secure_injection to `true` and returns self, allowing for chaining methods
     def make_secure
-      warn "**Deprecation Warning**: the `Page_Methods#secure_injection`, `Page_Methods#make_unsecure` and `Page_Methods#make_secure` methods are deprecated. Use `Page_Methods#copy(true)` for safeguarding against font/resource conflicts when 'stamping' one PDF page over another."
+      warn "**Deprecation Warning**:=>the `Page_Methods#secure_injection`, `Page_Methods#make_unsecure` and `Page_Methods#make_secure` methods are deprecated. Use `Page_Methods#copy(true)` for safeguarding against font/resource conflicts when 'stamping' one PDF page over another."
       @secure_injection = true
       self
     end
 
     # sets secure_injection to `false` and returns self, allowing for chaining methods
     def make_unsecure
-      warn "**Deprecation Warning**: the `Page_Methods#secure_injection`, `Page_Methods#make_unsecure` and `Page_Methods#make_secure` methods are deprecated. Use `Page_Methods#copy(true)` for safeguarding against font/resource conflicts when 'stamping' one PDF page over another."
+      warn "**Deprecation Warning**:=>the `Page_Methods#secure_injection`, `Page_Methods#make_unsecure` and `Page_Methods#make_secure` methods are deprecated. Use `Page_Methods#copy(true)` for safeguarding against font/resource conflicts when 'stamping' one PDF page over another."
       @secure_injection = false
       self
     end
@@ -113,7 +113,7 @@ module CombinePDF
     end
 
     # accessor (setter) for the :MediaBox element of the page
-    # dimensions:: an Array consisting of four numbers (can be floats) setting the size of the media box.
+    # dimensions::=>an Array consisting of four numbers (can be floats) setting the size of the media box.
     def mediabox=(dimensions = [0.0, 0.0, 612.0, 792.0])
       self[:MediaBox] = dimensions
     end
@@ -124,7 +124,7 @@ module CombinePDF
     end
 
     # accessor (setter) for the :CropBox element of the page
-    # dimensions:: an Array consisting of four numbers (can be floats) setting the size of the media box.
+    # dimensions::=>an Array consisting of four numbers (can be floats) setting the size of the media box.
     def cropbox=(dimensions = [0.0, 0.0, 612.0, 792.0])
       self[:CropBox] = dimensions
     end
@@ -146,19 +146,16 @@ module CombinePDF
     end
 
     # This method adds a simple text box to the Page represented by the PDFWriter class.
-    # This function takes two values:
-    # text:: the text to potin the box.
-    # properties:: a Hash of box properties.
-    # the symbols and values in the properties Hash could be any or all of the following:
-    # x:: the left position of the box.
-    # y:: the BOTTOM position of the box.
-    # width:: the width/length of the box. negative values will be computed from edge of page. defaults to 0 (end of page).
-    # height:: the height of the box. negative values will be computed from edge of page. defaults to 0 (end of page).
-    # text_align:: symbol for horizontal text alignment, can be ":center" (default), ":right", ":left"
-    # text_valign:: symbol for vertical text alignment, can be ":center" (default), ":top", ":bottom"
-    # text_padding:: a Float between 0 and 1, setting the padding for the text. defaults to 0.05 (5%).
-    # font:: a registered font name or an Array of names. defaults to ":Helvetica". The 14 standard fonts names are:
-    # - :"Times-Roman"
+    # This function takes two :values=>    # text::=>the text to potin the box.
+    # properties::=>a Hash of box properties.
+    # the symbols and values in the properties Hash could be any or all of the :following=>    # x::=>the left position of the box.
+    # y::=>the BOTTOM position of the box.
+    # width::=>the width/length of the box. negative values will be computed from edge of page. defaults to 0 (end of page).
+    # height::=>the height of the box. negative values will be computed from edge of page. defaults to 0 (end of page).
+    # text_align::=>symbol for horizontal text alignment, can be ":center" (default), ":right", ":left"
+    # text_valign::=>symbol for vertical text alignment, can be ":center" (default), ":top", ":bottom"
+    # text_padding::=>a Float between 0 and 1, setting the padding for the text. defaults to 0.05 (5%).
+    # font::=>a registered font name or an Array of names. defaults to ":Helvetica". The 14 standard fonts names :are=>    # - :"Times-Roman"
     # - :"Times-Bold"
     # - :"Times-Italic"
     # - :"Times-BoldItalic"
@@ -172,38 +169,38 @@ module CombinePDF
     # - :"Courier-BoldOblique"
     # - :Symbol
     # - :ZapfDingbats
-    # font_size:: an Integer for the font size, or :fit_text to fit the text in the box. defaults to ":fit_text"
-    # max_font_size:: if font_size is set to :fit_text, this will be the maximum font size. defaults to nil (no maximum)
-    # font_color:: text color in [R, G, B], an array with three floats, each in a value between 0 to 1 (gray will be "[0.5, 0.5, 0.5]"). defaults to black.
-    # stroke_color:: text stroke color in [R, G, B], an array with three floats, each in a value between 0 to 1 (gray will be "[0.5, 0.5, 0.5]"). defounlts to nil (no stroke).
-    # stroke_width:: text stroke width in PDF units. defaults to 0 (none).
-    # box_color:: box fill color in [R, G, B], an array with three floats, each in a value between 0 to 1 (gray will be "[0.5, 0.5, 0.5]"). defaults to nil (none).
-    # border_color:: box border color in [R, G, B], an array with three floats, each in a value between 0 to 1 (gray will be "[0.5, 0.5, 0.5]"). defaults to nil (none).
-    # border_width:: border width in PDF units. defaults to nil (none).
-    # box_radius:: border radius in PDF units. defaults to 0 (no corner rounding).
-    # opacity:: textbox opacity, a float between 0 (transparent) and 1 (opaque)
-    # ctm:: A PDF complient CTM data array that will manipulate the axis and allow transformations. i.e. `[1,0,0,1,0,0]`
+    # font_size::=>an Integer for the font size, or :fit_text to fit the text in the box. defaults to ":fit_text"
+    # max_font_size::=>if font_size is set to :fit_text, this will be the maximum font size. defaults to nil (no maximum)
+    # font_color::=>text color in [R, G, B], an array with three floats, each in a value between 0 to 1 (gray will be "[0.5, 0.5, 0.5]"). defaults to black.
+    # stroke_color::=>text stroke color in [R, G, B], an array with three floats, each in a value between 0 to 1 (gray will be "[0.5, 0.5, 0.5]"). defounlts to nil (no stroke).
+    # stroke_width::=>text stroke width in PDF units. defaults to 0 (none).
+    # box_color::=>box fill color in [R, G, B], an array with three floats, each in a value between 0 to 1 (gray will be "[0.5, 0.5, 0.5]"). defaults to nil (none).
+    # border_color::=>box border color in [R, G, B], an array with three floats, each in a value between 0 to 1 (gray will be "[0.5, 0.5, 0.5]"). defaults to nil (none).
+    # border_width::=>border width in PDF units. defaults to nil (none).
+    # box_radius::=>border radius in PDF units. defaults to 0 (no corner rounding).
+    # opacity::=>textbox opacity, a float between 0 (transparent) and 1 (opaque)
+    # ctm::=>A PDF complient CTM data array that will manipulate the axis and allow transformations. i.e. `[1,0,0,1,0,0]`
     def textbox(text, properties = {})
       options = {
-        x: page_size[0],
-        y: page_size[1],
-        width: 0,
-        height: -1,
-        text_align: :center,
-        text_valign: :center,
-        text_padding: 0.1,
-        font: nil,
-        font_size: :fit_text,
-        max_font_size: nil,
-        font_color: [0, 0, 0],
-        stroke_color: nil,
-        stroke_width: 0,
-        box_color: nil,
-        border_color: nil,
-        border_width: 0,
-        box_radius: 0,
-        opacity: 1,
-        ctm: nil # ~= [1,0,0,1,0,0]
+        :x=>page_size[0],
+        :y=>page_size[1],
+        :width=>0,
+        :height=>-1,
+        :text_align=>:center,
+        :text_valign=>:center,
+        :text_padding=>0.1,
+        :font=>nil,
+        :font_size=>:fit_text,
+        :max_font_size=>nil,
+        :font_color=>[0, 0, 0],
+        :stroke_color=>nil,
+        :stroke_width=>0,
+        :box_color=>nil,
+        :border_color=>nil,
+        :border_width=>0,
+        :box_radius=>0,
+        :opacity=>1,
+        :ctm=>nil # ~= [1,0,0,1,0,0]
       }
       options.update properties
       # reset the length and height to meaningful values, if negative
@@ -224,7 +221,7 @@ module CombinePDF
         # set graphic state for the box
         box_stream << "q\n"
         box_stream << "#{options[:ctm].join ' '} cm\n" if options[:ctm]
-        box_graphic_state = { ca: options[:opacity], CA: options[:opacity], LW: options[:border_width], LC: 0, LJ: 0, LD: 0 }
+        box_graphic_state = { :ca=>options[:opacity], :CA=>options[:opacity], :LW=>options[:border_width], :LC=>0, :LJ=>0, :LD=>0 }
         if options[:box_radius] != 0 # if the text box has rounded corners
           box_graphic_state[:LC] = 2
           box_graphic_state[:LJ] = 1
@@ -297,7 +294,7 @@ module CombinePDF
         y = options[:y] + (options[:height] * options[:text_padding])
 
         # set the fonts (fonts array, with :Helvetica as fallback).
-        fonts = [*options[:font], :Helvetica]
+        fonts = options[:font] + [:Helvetica]
         # fit text in box, if requested
         font_size = options[:font_size]
         if options[:font_size] == :fit_text
@@ -321,7 +318,7 @@ module CombinePDF
         # set graphic state for text
         text_stream << "q\n"
         text_stream << "#{options[:ctm].join ' '} cm\n" if options[:ctm]
-        text_graphic_state = graphic_state(ca: options[:opacity], CA: options[:opacity], LW: options[:stroke_width].to_f, LC: 2, LJ: 1, LD: 0)
+        text_graphic_state = graphic_state(:ca=>options[:opacity], :CA=>options[:opacity], :LW=>options[:stroke_width].to_f, :LC=>2, :LJ=>1, :LD=>0)
         text_stream << "#{object_to_pdf text_graphic_state} gs\n"
 
         # the following line was removed for Acrobat Reader compatability
@@ -366,9 +363,9 @@ module CombinePDF
 
     # gets the dimentions (width and height) of the text, as it will be printed in the PDF.
     #
-    # text:: the text to measure
-    # font:: a font name or an Array of font names. Font names should be registered fonts. The 14 standard fonts are pre regitered with the font library.
-    # size:: the size of the font (defaults to 1000 points).
+    # text::=>the text to measure
+    # font::=>a font name or an Array of font names. Font names should be registered fonts. The 14 standard fonts are pre regitered with the font library.
+    # size::=>the size of the font (defaults to 1000 points).
     def dimensions_of(text, fonts, size = 1000)
       Fonts.dimensions_of text, fonts, size
     end
@@ -377,10 +374,10 @@ module CombinePDF
     # the size is type Float and is rather exact
     # if the text cannot fit such a small place, returns zero (0).
     # maximum font size possible is set to 100,000 - which should be big enough for anything
-    # text:: the text to fit
-    # font:: the font name. @see font
-    # length:: the length to fit
-    # height:: the height to fit (optional - normally length is the issue)
+    # text::=>the text to fit
+    # font::=>the font name. @see font
+    # length::=>the length to fit
+    # height::=>the height to fit (optional - normally length is the issue)
     def fit_text(text, font, length, height = 10_000_000)
       size = 100_000
       size_array = [size]
@@ -432,9 +429,8 @@ module CombinePDF
 
     # resizes the page relative to it's current viewport (either the cropbox or the mediabox), setting the new viewport to the requested size.
     #
-    # accepts:
-    # new_size:: an Array with four elements: [X0, Y0, X_max, Y_max]. For example, A4: `[0, 0, 595, 842]`. It is important that the first two numbers are 0 unless a special effect is attempted. If the first two numbers change, the final result might not be the size requested, but the nearest possible transformation (calling the method again will allow a better resizing).
-    # conserve_aspect_ratio:: whether to keep the current content in the same aspect ratio or to allow streaching. Defaults to true - so that although the content is resized, it might not fill the new size completely.
+    # :accepts=>    # new_size::=>an Array with four :elements=>[X0, Y0, X_max, Y_max]. For example, :A4=>`[0, 0, 595, 842]`. It is important that the first two numbers are 0 unless a special effect is attempted. If the first two numbers change, the final result might not be the size requested, but the nearest possible transformation (calling the method again will allow a better resizing).
+    # conserve_aspect_ratio::=>whether to keep the current content in the same aspect ratio or to allow streaching. Defaults to true - so that although the content is resized, it might not fill the new size completely.
     def resize(new_size = nil, conserve_aspect_ratio = true)
       return page_size unless new_size
       c_mediabox = mediabox
@@ -444,7 +440,7 @@ module CombinePDF
       y_ratio = 1.0 * (new_size[3] - new_size[1]) / (c_size[3]) #-c_size[1])
       x_move = new_size[0] - c_size[0]
       y_move = new_size[1] - c_size[1]
-      # puts "ctm will be: #{x_ratio.round(4)} 0 0 #{y_ratio.round(4)} #{x_move} #{y_move}"
+      # puts "ctm will :be=>#{x_ratio.round(4)} 0 0 #{y_ratio.round(4)} #{x_move} #{y_move}"
       self[:MediaBox] = [(c_mediabox[0] + x_move), (c_mediabox[1] + y_move), ((c_mediabox[2] * x_ratio) + x_move), ((c_mediabox[3] * y_ratio) + y_move)]
       self[:CropBox] = [(c_cropbox[0] + x_move), (c_cropbox[1] + y_move), ((c_cropbox[2] * x_ratio) + x_move), ((c_cropbox[3] * y_ratio) + y_move)] if c_cropbox
       x_ratio = y_ratio = [x_ratio, y_ratio].min if conserve_aspect_ratio
@@ -467,8 +463,7 @@ module CombinePDF
     #
     # for an absolute cropping, simpy use the {#mediabox=} or {#cropbox=} methods, setting their value to the new {page_size}.
     #
-    # accepts:
-    # new_size:: an Array with four elements: [X0, Y0, X_max, Y_max]. For example, inch4(width)x6(length): `[200, 200, 488, 632]`
+    # :accepts=>    # new_size::=>an Array with four :elements=>[X0, Y0, X_max, Y_max]. For example, inch4(width)x6(length):=>`[200, 200, 488, 632]`
     def crop(new_size = nil)
       # no crop box? clear any cropping.
       return page_size unless new_size
@@ -514,14 +509,13 @@ module CombinePDF
     # note that the data's orientation is the way data is oriented on the page.
     # The display orientati0n (which might different) is controlled by the `:Rotate` property. see {#fix_orientation} for more details.
     #
-    # accepts one optional parameter:
-    # force:: to get the orientation, pass nil. to set the orientatiom, set fource to either :portrait or :landscape. defaults to nil (get orientation).
-    # clockwise:: sets the rotation directions. defaults to true (clockwise rotation).
+    # accepts one optional :parameter=>    # force::=>to get the orientation, pass nil. to set the orientatiom, set fource to either :portrait or :landscape. defaults to nil (get orientation).
+    # clockwise::=>sets the rotation directions. defaults to true (clockwise rotation).
     #
     # returns the current orientation (:portrait or :landscape) if used to get the orientation.
     # otherwise, if used to set the orientation, returns the page object to allow method chaining.
     #
-    # * Notice: a square page always returns the :portrait value and is ignored when trying to set the orientation.
+    # * :Notice=>a square page always returns the :portrait value and is ignored when trying to set the orientation.
     def orientation(force = nil, clockwise = true)
       a = page_size
       return (a[2] - a[0] > a[3] - a[1]) ? :landscape : :portrait unless force
@@ -537,45 +531,44 @@ module CombinePDF
     # since the table_data Array is updated, it is possible to call this method a few times,
     # each time creating or moving to the next page, until table_data.empty? returns true.
     #
-    # accepts a Hash with any of the following keys as well as any of the PDFWriter#textbox options:
-    # headers:: an Array of strings with the headers (will be repeated every page).
-    # table_data:: as Array of Arrays, each containing a string for each column. the first row sets the number of columns. extra columns will be ignored.
-    # font:: a registered or standard font name (see PDFWriter). defaults to nil (:Helvetica).
-    # header_font:: a registered or standard font name for the headers (see PDFWriter). defaults to nil (the font for all the table rows).
-    # max_font_size:: the maximum font size. if the string doesn't fit, it will be resized. defaults to 14.
-    # column_widths:: an array of relative column widths ([1,2] will display only the first two columns, the second twice as big as the first). defaults to nil (even widths).
-    # header_color:: the header color. defaults to [0.8, 0.8, 0.8] (light gray).
-    # main_color:: main row color. defaults to nil (transparent / white).
-    # alternate_color:: alternate row color. defaults to [0.95, 0.95, 0.95] (very light gray).
-    # font_color:: font color. defaults to [0,0,0] (black).
-    # border_color:: border color. defaults to [0,0,0] (black).
-    # border_width:: border width in PDF units. defaults to 1.
-    # header_align:: the header text alignment within each column (:right, :left, :center). defaults to :center.
-    # row_align:: the row text alignment within each column. defaults to :left (:right for RTL table).
-    # direction:: the table's writing direction (:ltr or :rtl). this reffers to the direction of the columns and doesn't effect text (rtl text is automatically recognized). defaults to :ltr.
-    # max_rows:: the maximum number of rows to actually draw, INCLUDING the header row. deafults to 25.
-    # xy:: an Array specifying the top-left corner of the table. defaulte to [page_width*0.1, page_height*0.9].
-    # size:: an Array specifying the height and the width of the table.  defaulte to [page_width*0.8, page_height*0.8].
+    # accepts a Hash with any of the following keys as well as any of the PDFWriter#textbox :options=>    # headers::=>an Array of strings with the headers (will be repeated every page).
+    # table_data::=>as Array of Arrays, each containing a string for each column. the first row sets the number of columns. extra columns will be ignored.
+    # font::=>a registered or standard font name (see PDFWriter). defaults to nil (:Helvetica).
+    # header_font::=>a registered or standard font name for the headers (see PDFWriter). defaults to nil (the font for all the table rows).
+    # max_font_size::=>the maximum font size. if the string doesn't fit, it will be resized. defaults to 14.
+    # column_widths::=>an array of relative column widths ([1,2] will display only the first two columns, the second twice as big as the first). defaults to nil (even widths).
+    # header_color::=>the header color. defaults to [0.8, 0.8, 0.8] (light gray).
+    # main_color::=>main row color. defaults to nil (transparent / white).
+    # alternate_color::=>alternate row color. defaults to [0.95, 0.95, 0.95] (very light gray).
+    # font_color::=>font color. defaults to [0,0,0] (black).
+    # border_color::=>border color. defaults to [0,0,0] (black).
+    # border_width::=>border width in PDF units. defaults to 1.
+    # header_align::=>the header text alignment within each column (:right, :left, :center). defaults to :center.
+    # row_align::=>the row text alignment within each column. defaults to :left (:right for RTL table).
+    # direction::=>the table's writing direction (:ltr or :rtl). this reffers to the direction of the columns and doesn't effect text (rtl text is automatically recognized). defaults to :ltr.
+    # max_rows::=>the maximum number of rows to actually draw, INCLUDING the header row. deafults to 25.
+    # xy::=>an Array specifying the top-left corner of the table. defaulte to [page_width*0.1, page_height*0.9].
+    # size::=>an Array specifying the height and the width of the table.  defaulte to [page_width*0.8, page_height*0.8].
     def write_table(options = {})
       defaults = {
-        headers: nil,
-        table_data: [[]],
-        font: nil,
-        header_font: nil,
-        max_font_size: 14,
-        column_widths: nil,
-        header_color: [0.8, 0.8, 0.8],
-        main_color: nil,
-        alternate_color: [0.95, 0.95, 0.95],
-        font_color: [0, 0, 0],
-        border_color: [0, 0, 0],
-        border_width: 1,
-        header_align: :center,
-        row_align: nil,
-        direction: :ltr,
-        max_rows: 25,
-        xy: nil,
-        size: nil
+        :headers=>nil,
+        :table_data=>[[]],
+        :font=>nil,
+        :header_font=>nil,
+        :max_font_size=>14,
+        :column_widths=>nil,
+        :header_color=>[0.8, 0.8, 0.8],
+        :main_color=>nil,
+        :alternate_color=>[0.95, 0.95, 0.95],
+        :font_color=>[0, 0, 0],
+        :border_color=>[0, 0, 0],
+        :border_width=>1,
+        :header_align=>:center,
+        :row_align=>nil,
+        :direction=>:ltr,
+        :max_rows=>25,
+        :xy=>nil,
+        :size=>nil
       }
       options = defaults.merge options
       raise 'method call error! not enough rows allowed to create table' if (options[:max_rows].to_i < 1 && options[:headers]) || (options[:max_rows].to_i <= 0)
@@ -611,7 +604,7 @@ module CombinePDF
           headers = headers.reverse if options[:direction] == :rtl
           column_widths.each_index do |i|
             text = headers[i].to_s
-            textbox text, { x: x, y: (top - (height * row_number)), width: column_widths[i], height: height, box_color: options[:header_color], text_align: options[:header_align] }.merge(options).merge(font: options[:header_font])
+            textbox text, { :x=>x, :y=>(top - (height * row_number)), :width=>column_widths[i], :height=>height, :box_color=>options[:header_color], :text_align=>options[:header_align] }.merge(options).merge(:font=>options[:header_font])
             x += column_widths[i]
           end
           row_number += 1
@@ -622,7 +615,7 @@ module CombinePDF
         column_widths.each_index do |i|
           text = row_data[i].to_s
           box_color = (options[:alternate_color] && ((row_number.odd? && options[:headers]) || row_number.even?)) ? options[:alternate_color] : options[:main_color]
-          textbox text, { x: x, y: (top - (height * row_number)), width: column_widths[i], height: height, box_color: box_color, text_align: options[:row_align] }.merge(options)
+          textbox text, { :x=>x, :y=>(top - (height * row_number)), :width=>column_widths[i], :height=>height, :box_color=>box_color, :text_align=>options[:row_align] }.merge(options)
           x += column_widths[i]
         end
         row_number += 1
@@ -669,7 +662,7 @@ module CombinePDF
     def init_contents
       self[:Contents] = self[:Contents][:referenced_object][:indirect_without_dictionary] if self[:Contents].is_a?(Hash) && self[:Contents][:referenced_object] && self[:Contents][:referenced_object].is_a?(Hash) && self[:Contents][:referenced_object][:indirect_without_dictionary]
       self[:Contents] = [self[:Contents]] unless self[:Contents].is_a?(Array)
-      self[:Contents].delete(is_reference_only: true, referenced_object: { indirect_reference_id: 0, raw_stream_content: '' })
+      self[:Contents].delete(:is_reference_only=>true, :referenced_object=>{ :indirect_reference_id=>0, :raw_stream_content=>'' })
       # un-nest any referenced arrays
       self[:Contents].map! { |s| actual_value(s).is_a?(Array) ? actual_value(s) : s }
       self[:Contents].flatten!
@@ -690,7 +683,7 @@ module CombinePDF
     # object:: can be a string or a hash object
     # location:: can be any numeral related to the possition in the :Contents array. defaults to -1 == insert at the end.
     def insert_content(object, location = -1)
-      object = { is_reference_only: true, referenced_object: { indirect_reference_id: 0, raw_stream_content: object } } if object.is_a?(String)
+      object = { :is_reference_only=>true, :referenced_object=>{ :indirect_reference_id=>0, :raw_stream_content=>object } } if object.is_a?(String)
       raise TypeError, 'expected a String or Hash object.' unless object.is_a?(Hash)
       prep_content_array
       self[:Contents].insert location, object

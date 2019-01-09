@@ -1,4 +1,4 @@
-# -*- encoding : utf-8 -*-
+# -*- encoding :=>utf-8 -*-
 ########################################################
 ## Thoughts from reading the ISO 32000-1:2008
 ## this file is part of the CombinePDF library and the code
@@ -10,7 +10,7 @@ module CombinePDF
 
   # @!visibility private
   # @private
-  #:nodoc: all
+  #::nodoc=>all
 
   protected
 
@@ -38,10 +38,10 @@ module CombinePDF
     #
     # <b>the data is required and it is not possible to set the data at a later stage</b>
     #
-    # string:: the data to be parsed, as a String object.
+    # string::=>the data to be parsed, as a String object.
     def initialize(string, options = {})
       raise TypeError, "couldn't parse data, expecting type String" unless string.is_a? String
-      @string_to_parse = string.force_encoding(Encoding::ASCII_8BIT)
+      @string_to_parse = string
       @literal_strings = [].dup
       @hex_strings = [].dup
       @streams = [].dup
@@ -123,7 +123,7 @@ module CombinePDF
             stream_data.shift
           end
           while id_array[0] && stream_data[0]
-            stream_data[0] = { indirect_without_dictionary: stream_data[0] } unless stream_data[0].is_a?(Hash)
+            stream_data[0] = { :indirect_without_dictionary=>stream_data[0] } unless stream_data[0].is_a?(Hash)
             stream_data[0][:indirect_reference_id] = id_array.shift
             stream_data[0][:indirect_generation_number] = 0
             collection << (stream_data.shift)
@@ -179,7 +179,7 @@ module CombinePDF
 
       # collect any missing objects from the forms_data
       unless @forms_object.nil? || @forms_object.empty?
-        @forms_object[:related_objects] = (@parsed.select { |o| o[:FT] }).map! { |o| { is_reference_only: true, referenced_object: o } }
+        @forms_object[:related_objects] = (@parsed.select { |o| o[:FT] }).map! { |o| { :is_reference_only=>true, :referenced_object=>o } }
         @forms_object[:related_objects].delete @forms_object
       end
 
@@ -243,22 +243,22 @@ module CombinePDF
         ##########################################
         elsif str = @scanner.scan(/\<[0-9a-fA-F]*\>/)
           # warn "Found a hex string"
-          str = str.slice(1..-2).force_encoding(Encoding::ASCII_8BIT)
+          str = str.slice(1..-2)
           # str = "0#{str}" if str.length.odd?
-          out << unify_string([str].pack('H*').force_encoding(Encoding::ASCII_8BIT))
+          out << unify_string([str].pack('H*'))
         ##########################################
         ## parse a space delimited Hex String
         ##########################################
         elsif str = @scanner.scan(/\<[0-9a-fA-F\s]*\>/)
           # warn "Found a space seperated hex string"
-          str = str.force_encoding(Encoding::ASCII_8BIT).split(/\s/).map! {|b| b.length.odd? ? "0#{b}" : b}
-          out << unify_string(str.pack('H*' * str.length).force_encoding(Encoding::ASCII_8BIT))
+          str = str.split(/\s/).map! {|b| b.length.odd? ? "0#{b}" : b}
+          out << unify_string(str.pack('H*' * str.length))
         ##########################################
         ## parse a Literal String
         ##########################################
         elsif @scanner.scan(/\(/)
           # warn "Found a literal string"
-          str = ''.force_encoding(Encoding::ASCII_8BIT)
+          str = ''
           count = 1
           while count > 0 && @scanner.rest?
             scn = @scanner.scan_until(/[\(\)]/)
@@ -285,7 +285,7 @@ module CombinePDF
           end
           # The PDF formatted string is: str[0..-2]
           # now starting to convert to regular string
-          str_bytes = str.force_encoding(Encoding::ASCII_8BIT)[0..-2].bytes.to_a
+          str_bytes = str[0..-2].bytes.to_a
           str = []
           until str_bytes.empty?
             case str_bytes[0]
@@ -335,7 +335,7 @@ module CombinePDF
               str << str_bytes.shift
             end
           end
-          out << unify_string(str.pack('C*').force_encoding(Encoding::ASCII_8BIT))
+          out << unify_string(str.pack('C*'))
         ##########################################
         ## parse a Dictionary
         ##########################################
@@ -367,10 +367,10 @@ module CombinePDF
           # need to remove end of stream
           if out.last.is_a? Hash
             # out.last[:raw_stream_content] = str[0...-10] #cuts only one EON char (\n or \r)
-            out.last[:raw_stream_content] = unify_string str.sub(/(\r\n|\n|\r)?endstream\z/, '').force_encoding(Encoding::ASCII_8BIT)
+            out.last[:raw_stream_content] = unify_string str.sub(/(\r\n|\n|\r)?endstream\z/, '')
           else
             warn 'Stream not attached to dictionary!'
-            out << str.sub(/(\r\n|\n|\r)?endstream\z/, '').force_encoding(Encoding::ASCII_8BIT)
+            out << str.sub(/(\r\n|\n|\r)?endstream\z/, '')
           end
         ##########################################
         ## parse an Object after finished
@@ -378,9 +378,9 @@ module CombinePDF
         elsif str = @scanner.scan(/endobj/)
           # what to do when this is an object?
           if out.last.is_a? Hash
-            out << out.pop.merge(indirect_generation_number: out.pop, indirect_reference_id: out.pop)
+            out << out.pop.merge(:indirect_generation_number=>out.pop, :indirect_reference_id=>out.pop)
           else
-            out << { indirect_without_dictionary: out.pop, indirect_generation_number: out.pop, indirect_reference_id: out.pop }
+            out << { :indirect_without_dictionary=>out.pop, :indirect_generation_number=>out.pop, :indirect_reference_id=>out.pop }
           end
           fresh = true
           # fix wkhtmltopdf use of PDF 1.1 Dest using symbols instead of strings
@@ -390,7 +390,7 @@ module CombinePDF
         ## Parse an Object Reference
         ##########################################
         elsif @scanner.scan(/R/)
-          out << { is_reference_only: true, indirect_generation_number: out.pop, indirect_reference_id: out.pop }
+          out << { :is_reference_only=>true, :indirect_generation_number=>out.pop, :indirect_reference_id=>out.pop }
         # @references << out.last
         ##########################################
         ## Parse Bool - true and after false
@@ -462,9 +462,9 @@ module CombinePDF
             keep << out.pop # .tap {|i| puts "#{i} is a REF"}
 
             if out.last.is_a? Hash
-              out << out.pop.merge(indirect_generation_number: out.pop, indirect_reference_id: out.pop)
+              out << out.pop.merge(:indirect_generation_number=>out.pop, :indirect_reference_id=>out.pop)
             else
-              out << { indirect_without_dictionary: out.pop, indirect_generation_number: out.pop, indirect_reference_id: out.pop }
+              out << { :indirect_without_dictionary=>out.pop, :indirect_generation_number=>out.pop, :indirect_reference_id=>out.pop }
             end
             # fix wkhtmltopdf use of PDF 1.1 Dest using symbols instead of strings
             out.last[:Dest] = unify_string(out.last[:Dest].to_s) if out.last[:Dest] && out.last[:Dest].is_a?(Symbol)
@@ -525,11 +525,11 @@ module CombinePDF
             inheritance_hash[:CropBox] = catalogs[:CropBox] if catalogs[:CropBox]
             inheritance_hash[:Rotate] = catalogs[:Rotate] if catalogs[:Rotate]
             if catalogs[:Resources]
-              inheritance_hash[:Resources] ||= { referenced_object: {}, is_reference_only: true }.dup
+              inheritance_hash[:Resources] ||= { :referenced_object=>{}, :is_reference_only=>true }.dup
               (inheritance_hash[:Resources][:referenced_object] || inheritance_hash[:Resources]).update((catalogs[:Resources][:referenced_object] || catalogs[:Resources]), &HASH_UPDATE_PROC_FOR_OLD)
             end
             if catalogs[:ColorSpace]
-              inheritance_hash[:ColorSpace] ||= { referenced_object: {}, is_reference_only: true }.dup
+              inheritance_hash[:ColorSpace] ||= { :referenced_object=>{}, :is_reference_only=>true }.dup
               (inheritance_hash[:ColorSpace][:referenced_object] || inheritance_hash[:ColorSpace]).update((catalogs[:ColorSpace][:referenced_object] || catalogs[:ColorSpace]), &HASH_UPDATE_PROC_FOR_OLD)
             end
             # (inheritance_hash[:Resources] ||= {}).update((catalogs[:Resources][:referenced_object] || catalogs[:Resources]), &HASH_UPDATE_PROC_FOR_NEW) if catalogs[:Resources]
@@ -547,13 +547,13 @@ module CombinePDF
             catalogs[:CropBox] ||= inheritance_hash[:CropBox] if inheritance_hash[:CropBox]
             catalogs[:Rotate] ||= inheritance_hash[:Rotate] if inheritance_hash[:Rotate]
             if inheritance_hash[:Resources]
-              catalogs[:Resources] ||= { referenced_object: {}, is_reference_only: true }.dup
-              catalogs[:Resources] = { referenced_object: catalogs[:Resources], is_reference_only: true } unless catalogs[:Resources][:referenced_object]
+              catalogs[:Resources] ||= { :referenced_object=>{}, :is_reference_only=>true }.dup
+              catalogs[:Resources] = { :referenced_object=>catalogs[:Resources], :is_reference_only=>true } unless catalogs[:Resources][:referenced_object]
               catalogs[:Resources][:referenced_object].update((inheritance_hash[:Resources][:referenced_object] || inheritance_hash[:Resources]), &HASH_UPDATE_PROC_FOR_OLD)
             end
             if inheritance_hash[:ColorSpace]
-              catalogs[:ColorSpace] ||= { referenced_object: {}, is_reference_only: true }.dup
-              catalogs[:ColorSpace] = { referenced_object: catalogs[:ColorSpace], is_reference_only: true } unless catalogs[:ColorSpace][:referenced_object]
+              catalogs[:ColorSpace] ||= { :referenced_object=>{}, :is_reference_only=>true }.dup
+              catalogs[:ColorSpace] = { :referenced_object=>catalogs[:ColorSpace], :is_reference_only=>true } unless catalogs[:ColorSpace][:referenced_object]
               catalogs[:ColorSpace][:referenced_object].update((inheritance_hash[:ColorSpace][:referenced_object] || inheritance_hash[:ColorSpace]), &HASH_UPDATE_PROC_FOR_OLD)
             end
             # (catalogs[:ColorSpace] ||= {}).update(inheritance_hash[:ColorSpace], &HASH_UPDATE_PROC_FOR_OLD) if inheritance_hash[:ColorSpace]
@@ -686,7 +686,7 @@ module CombinePDF
 
     # All Strings are one String
     def unify_string(str)
-      str.force_encoding(Encoding::ASCII_8BIT)
+      str
       @strings_dictionary[str] ||= str
     end
 

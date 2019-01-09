@@ -1,5 +1,6 @@
 # -*- encoding : utf-8 -*-
 
+require 'rubygems'
 require 'zlib'
 require 'securerandom'
 require 'strscan'
@@ -128,6 +129,16 @@ load 'combine_pdf/version.rb'
 # MIT
 module CombinePDF
 end
+
+class String
+  def force_encoding(enc)
+    self
+  end
+end
+#
+# module Encoding
+#   ASCII_8BIT = 0
+# end
 
 #########################################################
 # this file is part of the CombinePDF library and the code

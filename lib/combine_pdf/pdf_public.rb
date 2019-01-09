@@ -1,4 +1,4 @@
-# -*- encoding : utf-8 -*-
+# -*- encoding :=>utf-8 -*-
 ########################################################
 ## Thoughts from reading the ISO 32000-1:2008
 ## this file is part of the CombinePDF library and the code
@@ -12,15 +12,12 @@ module CombinePDF
   #
   # PDF objects can be used to combine or to inject data.
   # == Combine/Merge PDF files or Pages
-  # To combine PDF files (or data):
-  #   pdf = CombinePDF.new
+  # To combine PDF files (or data):=>  #   pdf = CombinePDF.new
   #   pdf << CombinePDF.load("file1.pdf") # one way to combine, very fast.
   #   pdf << CombinePDF.load("file2.pdf")
   #   pdf.save "combined.pdf"
-  # or even a one liner:
-  #   (CombinePDF.load("file1.pdf") << CombinePDF.load("file2.pdf") << CombinePDF.load("file3.pdf")).save("combined.pdf")
-  # you can also add just odd or even pages:
-  #   pdf = CombinePDF.new
+  # or even a one :liner=>  #   (CombinePDF.load("file1.pdf") << CombinePDF.load("file2.pdf") << CombinePDF.load("file3.pdf")).save("combined.pdf")
+  # you can also add just odd or even :pages=>  #   pdf = CombinePDF.new
   #   i = 0
   #   CombinePDF.load("file.pdf").pages.each do |page|
   #     i += 1
@@ -32,19 +29,16 @@ module CombinePDF
   # To add content to existing PDF pages, first import the new content from an existing PDF file.
   # after that, add the content to each of the pages in your existing PDF.
   #
-  # in this example, we will add a company logo to each page:
-  #   company_logo = CombinePDF.load("company_logo.pdf").pages[0]
+  # in this example, we will add a company logo to each :page=>  #   company_logo = CombinePDF.load("company_logo.pdf").pages[0]
   #   pdf = CombinePDF.load "content_file.pdf"
   #   pdf.pages.each {|page| page << company_logo} # notice the << operator is on a page and not a PDF object.
   #   pdf.save "content_with_logo.pdf"
   # Notice the << operator is on a page and not a PDF object. The << operator acts differently on PDF objects and on Pages.
   #
-  # The << operator defaults to secure injection by renaming references to avoid conflics. For overlaying pages using compressed data that might not be editable (due to limited filter support), you can use:
-  #   pdf.pages(nil, false).each {|page| page << stamp_page}
+  # The << operator defaults to secure injection by renaming references to avoid conflics. For overlaying pages using compressed data that might not be editable (due to limited filter support), you can :use=>  #   pdf.pages(nil, false).each {|page| page << stamp_page}
   #
   # == Page Numbering
-  # adding page numbers to a PDF object or file is as simple as can be:
-  #   pdf = CombinePDF.load "file_to_number.pdf"
+  # adding page numbers to a PDF object or file is as simple as can :be=>  #   pdf = CombinePDF.load "file_to_number.pdf"
   #   pdf.number_pages
   #   pdf.save "file_with_numbering.pdf"
   #
@@ -53,10 +47,8 @@ module CombinePDF
   # == Loading PDF data
   # Loading PDF data can be done from file system or directly from the memory.
   #
-  # Loading data from a file is easy:
-  #   pdf = CombinePDF.load("file.pdf")
-  # you can also parse PDF files from memory:
-  #   pdf_data = IO.read 'file.pdf' # for this demo, load a file to memory
+  # Loading data from a file is :easy=>  #   pdf = CombinePDF.load("file.pdf")
+  # you can also parse PDF files from :memory=>  #   pdf_data = IO.read 'file.pdf' # for this demo, load a file to memory
   #   pdf = CombinePDF.parse(pdf_data)
   # Loading from the memory is especially effective for importing PDF data recieved through the internet or from a different authoring library such as Prawn.
   class PDF
@@ -73,14 +65,12 @@ module CombinePDF
     # the objects attribute is an Array containing all the PDF sub-objects for te class.
     attr_reader :objects
     # the info attribute is a Hash that sets the Info data for the PDF.
-    # use, for example:
-    #   pdf.info[:Title] = "title"
+    # use, for :example=>    #   pdf.info[:Title] = "title"
     attr_reader :info
     # set/get the PDF version of the file (1.1-1.7) - shuold be type Float.
     attr_accessor :version
     # the viewer_preferences attribute is a Hash that sets the ViewerPreferences data for the PDF.
-    # use, for example:
-    #   pdf.viewer_preferences[:HideMenubar] = true
+    # use, for :example=>    #   pdf.viewer_preferences[:HideMenubar] = true
     attr_reader :viewer_preferences
     # Access the Outlines PDF object Hash (or reference). Use with care.
     attr_reader :outlines
@@ -118,7 +108,7 @@ module CombinePDF
     #
     # returns the new page object.
     #
-    # unless the media box is specified, it defaults to US Letter: [0, 0, 612.0, 792.0]
+    # unless the media box is specified, it defaults to US :Letter=>[0, 0, 612.0, 792.0]
     def new_page(mediabox = [0, 0, 612.0, 792.0], _location = -1)
       p = PDFWriter.new(mediabox)
       insert(-1, p)
@@ -133,7 +123,7 @@ module CombinePDF
 
     # set the title for the pdf
     # The title is stored in the information dictionary and isn't required
-    # new_title:: a string that is the new author value.
+    # new_title::=>a string that is the new author value.
     def title=(new_title = nil)
       @info[:Title] = new_title
     end
@@ -147,7 +137,7 @@ module CombinePDF
     # set the author value for the pdf.
     # The author is stored in the information dictionary and isn't required
     #
-    # new_title:: a string that is the new author value.
+    # new_title::=>a string that is the new author value.
     def author=(new_author = nil)
       @info[:Author] = new_author
     end
@@ -159,11 +149,12 @@ module CombinePDF
 
     # Save the PDF to file.
     #
-    # file_name:: is a string or path object for the output.
+    # file_name::=>is a string or path object for the output.
     #
     # **Notice!** if the file exists, it **WILL** be overwritten.
     def save(file_name, options = {})
-      IO.binwrite file_name, to_pdf(options)
+      # IO.binwrite file_name, to_pdf(options)
+      File.open(file_name,'w'){|f| f.write(to_pdf(options))}
     end
 
     # Formats the data to PDF formats and returns a binary string that represents the PDF file content.
@@ -175,7 +166,7 @@ module CombinePDF
       # reset version if not specified
       @version = 1.5 if @version.to_f == 0.0
       # set info for merged file
-      @info[:ModDate] = @info[:CreationDate] = Time.now.strftime "D:%Y%m%d%H%M%S%:::z'00"
+      @info[:ModDate] = @info[:CreationDate] = Time.now.strftime("D:%Y%m%d%H%M%S%:::z'00")
       @info[:Subject] = options[:subject] if options[:subject]
       @info[:Producer] = options[:producer] if options[:producer]
       # rebuild_catalog
@@ -187,7 +178,7 @@ module CombinePDF
       xref = []
       indirect_object_count = 1 # the first object is the null object
       # write head (version and binanry-code)
-      out << "%PDF-#{@version}\n%\xFF\xFF\xFF\xFF\xFF\x00\x00\x00\x00".force_encoding(Encoding::ASCII_8BIT)
+      out << "%PDF-#{@version}\n%\xFF\xFF\xFF\xFF\xFF\x00\x00\x00\x00"
 
       # collect objects and set xref table locations
       loc = 0
@@ -211,7 +202,7 @@ module CombinePDF
       # when finished, remove the numbering system and keep only pointers
       remove_old_ids
       # output the pdf stream
-      out.join("\n".force_encoding(Encoding::ASCII_8BIT)).force_encoding(Encoding::ASCII_8BIT)
+      out.join("\n")
     end
 
     # this method returns all the pages cataloged in the catalog.
@@ -221,7 +212,7 @@ module CombinePDF
     #
     # Page objects are Hash class objects. the page methods are added using a mixin or inheritance.
     #
-    # catalogs:: a catalog, or an Array of catalog objects. defaults to the existing catalog.
+    # catalogs::=>a catalog, or an Array of catalog objects. defaults to the existing catalog.
     def pages(catalogs = nil)
       page_list = []
       catalogs ||= get_existing_catalogs
@@ -270,27 +261,25 @@ module CombinePDF
     end
 
     # add the pages (or file) to the PDF (combine/merge) and RETURNS SELF, for nesting.
-    # for example:
-    #
+    # for :example=>    #
     #   pdf = CombinePDF.new "first_file.pdf"
     #
     #   pdf << CombinePDF.new "second_file.pdf"
     #
     #   pdf.save "both_files_merged.pdf"
-    # data:: is PDF page (Hash), and Array of PDF pages or a parsed PDF object to be added.
+    # data::=>is PDF page (Hash), and Array of PDF pages or a parsed PDF object to be added.
     def <<(data)
       insert(-1, data)
     end
 
     # add the pages (or file) to the BEGINNING of the PDF (combine/merge) and RETURNS SELF for nesting operators.
-    # for example:
-    #
+    # for :example=>    #
     #   pdf = CombinePDF.new "second_file.pdf"
     #
     #   pdf >> CombinePDF.new "first_file.pdf"
     #
     #   pdf.save "both_files_merged.pdf"
-    # data:: is PDF page (Hash), and Array of PDF pages or a parsed PDF object to be added.
+    # data::=>is PDF page (Hash), and Array of PDF pages or a parsed PDF object to be added.
     def >>(data)
       insert 0, data
     end
@@ -299,8 +288,8 @@ module CombinePDF
     #
     # returns the new pages Array! (unlike `#<<`, doesn't return self!)
     #
-    # location:: the location for the added page(s). Could be any number. negative numbers represent a count backwards (-1 being the end of the page array and 0 being the begining). if the location is beyond bounds, the pages will be added to the end of the PDF object (or at the begining, if the out of bounds was a negative number).
-    # data:: a PDF page, a PDF file (CombinePDF.new "filname.pdf") or an array of pages (CombinePDF.new("filname.pdf").pages[0..3]).
+    # location::=>the location for the added page(s). Could be any number. negative numbers represent a count backwards (-1 being the end of the page array and 0 being the begining). if the location is beyond bounds, the pages will be added to the end of the PDF object (or at the begining, if the out of bounds was a negative number).
+    # data::=>a PDF page, a PDF file (CombinePDF.new "filname.pdf") or an array of pages (CombinePDF.new("filname.pdf").pages[0..3]).
     def insert(location, data)
       pages_to_add = nil
       if data.is_a? PDF
@@ -342,7 +331,7 @@ module CombinePDF
     #
     # returns nil if failed or if out of bounds.
     #
-    # page_index:: the page's index in the zero (0) based page array. negative numbers represent a count backwards (-1 being the end of the page array and 0 being the begining).
+    # page_index::=>the page's index in the zero (0) based page array. negative numbers represent a count backwards (-1 being the end of the page array and 0 being the begining).
     def remove(page_index)
       catalog = rebuild_catalog
       pages_array = catalog[:Pages][:referenced_object][:Kids]
@@ -356,22 +345,21 @@ module CombinePDF
     # For unicode text, a unicode font(s) must first be registered. the registered font(s) must supply the
     # subset of characters used in the text. UNICODE IS AN ISSUE WITH THE PDF FORMAT - USE CAUSION.
     #
-    # options:: a Hash of options setting the behavior and format of the page numbers:
-    # - :number_format a string representing the format for page number. defaults to ' - %s - ' (allows for letter numbering as well, such as "a", "b"...).
+    # options::=>a Hash of options setting the behavior and format of the page :numbers=>    # - :number_format a string representing the format for page number. defaults to ' - %s - ' (allows for letter numbering as well, such as "a", "b"...).
     # - :location an Array containing the location for the page numbers, can be :top, :bottom, :top_left, :top_right, :bottom_left, :bottom_right or :center (:center == full page). defaults to [:top, :bottom].
     # - :start_at an Integer that sets the number for first page number. also accepts a letter ("a") for letter numbering. defaults to 1.
     # - :margin_from_height a number (PDF points) for the top and bottom margins. defaults to 45.
     # - :margin_from_side a number (PDF points) for the left and right margins. defaults to 15.
     # - :page_range a range of pages to be numbered (i.e. (2..-1) ) defaults to all the pages (nil). Remember to set the :start_at to the correct value.
     # the options Hash can also take all the options for {Page_Methods#textbox}.
-    # defaults to font: :Helvetica, font_size: 12 and no box (:border_width => 0, :box_color => nil).
+    # defaults to :font=>:Helvetica, :font_size=>12 and no box (:border_width => 0, :box_color => nil).
     def number_pages(options = {})
       opt = {
-        number_format: ' - %s - ',
-        start_at: 1,
-        font: :Helvetica,
-        margin_from_height: 45,
-        margin_from_side: 15
+        :number_format=>' - %s - ',
+        :start_at=>1,
+        :font=>:Helvetica,
+        :margin_from_height=>45,
+        :margin_from_side=>15
       }
       opt.update options
       opt[:location] ||= opt[:number_location] ||= opt[:stamp_location] ||= [:top, :bottom]
@@ -405,7 +393,7 @@ module CombinePDF
           page.textbox text, opt.merge(add_opt)
         end
         unless opt[:location] == just_center
-          add_opt = { font_size: small_font_size }.merge(opt)
+          add_opt = { :font_size=>small_font_size }.merge(opt)
           # text = opt[:number_format] % page_number
           # compute locations for text boxes
           text_dimantions = Fonts.dimensions_of(text, opt[:font], small_font_size)
@@ -423,22 +411,22 @@ module CombinePDF
           bottom_position = from_height + box_height
 
           if opt[:location].include? :top
-            page.textbox text, { x: center_position, y: top_position }.merge(add_opt)
+            page.textbox text, { :x=>center_position, :y=>top_position }.merge(add_opt)
           end
           if opt[:location].include? :bottom
-            page.textbox text, { x: center_position, y: bottom_position }.merge(add_opt)
+            page.textbox text, { :x=>center_position, :y=>bottom_position }.merge(add_opt)
           end
           if opt[:location].include? :top_left
-            page.textbox text, { x: left_position, y: top_position, font_size: small_font_size }.merge(add_opt)
+            page.textbox text, { :x=>left_position, :y=>top_position, :font_size=>small_font_size }.merge(add_opt)
           end
           if opt[:location].include? :bottom_left
-            page.textbox text, { x: left_position, y: bottom_position, font_size: small_font_size }.merge(add_opt)
+            page.textbox text, { :x=>left_position, :y=>bottom_position, :font_size=>small_font_size }.merge(add_opt)
           end
           if opt[:location].include? :top_right
-            page.textbox text, { x: right_position, y: top_position, font_size: small_font_size }.merge(add_opt)
+            page.textbox text, { :x=>right_position, :y=>top_position, :font_size=>small_font_size }.merge(add_opt)
           end
           if opt[:location].include? :bottom_right
-            page.textbox text, { x: right_position, y: bottom_position, font_size: small_font_size }.merge(add_opt)
+            page.textbox text, { :x=>right_position, :y=>bottom_position, :font_size=>small_font_size }.merge(add_opt)
           end
         end
         page_number = page_number.succ
@@ -447,9 +435,8 @@ module CombinePDF
 
     # This method stamps all (or some) of the pages is the PDF with the requested stamp.
     #
-    # The method accept:
-    # stamp:: either a String or a PDF page. If this is a String, you can add formating to add page numbering (i.e. "page number %i"). otherwise remember to escape any percent ('%') sign (i.e. "page \%number not shown\%").
-    # options:: an options Hash.
+    # The method :accept=>    # stamp::=>either a String or a PDF page. If this is a String, you can add formating to add page numbering (i.e. "page number %i"). otherwise remember to escape any percent ('%') sign (i.e. "page \%number not shown\%").
+    # options::=>an options Hash.
     #
     # If the stamp is a PDF page, only :page_range and :underlay (to reverse-stamp) are valid options.
     #
@@ -460,7 +447,7 @@ module CombinePDF
       case stamp
       when String
         options[:location] ||= [:center]
-        number_pages({ number_format: stamp }.merge(options))
+        number_pages({ :number_format=>stamp }.merge(options))
       when Page_Methods
         # stamp = stamp.copy(true)
         if options[:underlay]
@@ -479,7 +466,7 @@ module CombinePDF
     # # experimental, allows form data updates. This function lists the form data fields.
     # def form_list
     # 	if(@forms_data && actual_value(@forms_data).is_a?(Hash) && actual_value(@forms_data)[:Fields])
-    # 		actual_value(actual_value(@forms_data)[:Fields]).map {|f| actual_value(f)[:Kids] ? ({actual_value(f)[:T] => actual_value(f)[:Kids].map {|k| actual_value(k)[:T]}}) : actual_value(f)[:T]}
+    # 		actual_value(actual_value(@forms_data)[:Fields]).map {|f| actual_value(f)[:Kids] ? ({actual_value(f)[:T] => actual_value(f)[:Kids].map {|k| actual_value(k)[:T]}}) :=>actual_value(f)[:T]}
     # 	else
     # 		nil
     # 	end
@@ -487,7 +474,7 @@ module CombinePDF
     # # experimental, allows form data updates. This function gets the value of a specific form data field.
     # def form_get name
     # 	if(@forms_data && actual_value(@forms_data).is_a?(Hash) && actual_value(@forms_data)[:Fields])
-    # 		actual_value(actual_value(@forms_data)[:Fields]).map {|f| return actual_value(f)[:Kids] ? ({actual_value(f)[:V] => actual_value(f)[:Kids].map {|k| actual_value(k)[:V]}}) : actual_value(f)[:V] if actual_value(f)[:T] == name}
+    # 		actual_value(actual_value(@forms_data)[:Fields]).map {|f| return actual_value(f)[:Kids] ? ({actual_value(f)[:V] => actual_value(f)[:Kids].map {|k| actual_value(k)[:V]}}) :=>actual_value(f)[:V] if actual_value(f)[:T] == name}
     # 		# actual_value(actual_value(@forms_data)[:Fields]).each {|f| return actual_value(f)[:V] if actual_value(f)[:T] == name}
     # 	else
     # 		nil

@@ -7,8 +7,7 @@ CombinePDF is a nifty model, written in pure Ruby, to parse PDF files and combin
 
 ## Install
 
-Install with ruby gems:
-
+Install with ruby :gems=>
 ```ruby
 gem install combine_pdf
 ```
@@ -25,8 +24,7 @@ Please hit me up if you would like to join in and eventually take over.
 
 ## Known Limitations
 
-Quick rundown:
-
+Quick :rundown=>
 * When reading PDF Forms, some form data might be lost. I tried fixing this to the best of my ability, but I'm not sure it all works just yet.
 
 * When combining PDF Forms, form data might be unified. I couldn't fix this because this is how PDF forms work (filling a field fills in the data in any field with the same name), but frankly, I kinda liked the issue... it's almost a feature.
@@ -39,7 +37,7 @@ Quick rundown:
 
 * Some encrypted PDF files (usually the ones you can't view without a password) will fail quietly instead of noisily.
 
-* Sometimes the CombinePDF will raise an exception even if the PDF could be parsed (i.e., when PDF optional content exists)... I find it better to err on the side of caution, although for optional content PDFs an exception is avoidable using `CombinePDF.load(pdf_file, allow_optional_content: true)`.
+* Sometimes the CombinePDF will raise an exception even if the PDF could be parsed (i.e., when PDF optional content exists)... I find it better to err on the side of caution, although for optional content PDFs an exception is avoidable using `CombinePDF.load(pdf_file, :allow_optional_content=>true)`.
 
 CombinePDF is written natively in Ruby and should (presumably) work on all Ruby platforms that follow Ruby 2.0 compatibility.
 
@@ -53,8 +51,7 @@ If this library causes loss of data or burns down your house, I'm not to blame -
 
 ## Combine/Merge PDF files or Pages
 
-To combine PDF files (or data):
-
+To combine PDF files (or data):=>
 ```ruby
 pdf = CombinePDF.new
 pdf << CombinePDF.load("file1.pdf") # one way to combine, very fast.
@@ -62,14 +59,12 @@ pdf << CombinePDF.load("file2.pdf")
 pdf.save "combined.pdf"
 ```
 
-Or even a one liner:
-
+Or even a one :liner=>
 ```ruby
 (CombinePDF.load("file1.pdf") << CombinePDF.load("file2.pdf") << CombinePDF.load("file3.pdf")).save("combined.pdf")
 ```
 
-you can also add just odd or even pages:
-
+you can also add just odd or even :pages=>
 ```ruby
 pdf = CombinePDF.new
 i = 0
@@ -85,8 +80,7 @@ notice that adding all the pages one by one is slower then adding the whole file
 
 To add content to existing PDF pages, first import the new content from an existing PDF file. After that, add the content to each of the pages in your existing PDF.
 
-In this example, we will add a company logo to each page:
-
+In this example, we will add a company logo to each :page=>
 ```ruby
 company_logo = CombinePDF.load("company_logo.pdf").pages[0]
 pdf = CombinePDF.load "content_file.pdf"
@@ -96,16 +90,14 @@ pdf.save "content_with_logo.pdf"
 
 Notice the << operator is on a page and not a PDF object. The << operator acts differently on PDF objects and on Pages.
 
-The << operator defaults to secure injection by renaming references to avoid conflics. For overlaying pages using compressed data that might not be editable (due to limited filter support), you can use:
-
+The << operator defaults to secure injection by renaming references to avoid conflics. For overlaying pages using compressed data that might not be editable (due to limited filter support), you can :use=>
 ```ruby
 pdf.pages(nil, false).each {|page| page << stamp_page}
 ```
 
 ## Page Numbering
 
-adding page numbers to a PDF object or file is as simple as can be:
-
+adding page numbers to a PDF object or file is as simple as can :be=>
 ```ruby
 pdf = CombinePDF.load "file_to_number.pdf"
 pdf.number_pages
@@ -118,21 +110,18 @@ Numbering can be done with many different options, with different formating, wit
 
 Loading PDF data can be done from file system or directly from the memory.
 
-Loading data from a file is easy:
-
+Loading data from a file is :easy=>
 ```ruby
 pdf = CombinePDF.load("file.pdf")
 ```
 
-You can also parse PDF files from memory. Loading from the memory is especially effective for importing PDF data recieved through the internet or from a different authoring library such as Prawn:
-
+You can also parse PDF files from memory. Loading from the memory is especially effective for importing PDF data recieved through the internet or from a different authoring library such as :Prawn=>
 ```ruby
 pdf_data = prawn_pdf_document.render # Import PDF data from Prawn
 pdf = CombinePDF.parse(pdf_data)
 ```
 
-Using `parse` is also effective when loading data from a remote location, circumventing the need for unnecessary temporary files. For example:
-
+Using `parse` is also effective when loading data from a remote location, circumventing the need for unnecessary temporary files. For :example=>
 ```ruby
 require 'combine_pdf'
 require 'net/http'
@@ -145,15 +134,13 @@ pdf = CombinePDF.parse Net::HTTP.get_response(URI.parse(url)).body
 
 Similarly, to loading and parsing, rendering can also be performed either to the memory or to a file.
 
-You can output a string of PDF data using `.to_pdf`. For example, to let a user download the PDF from either a [Rails application](http://rubyonrails.org) or a [Plezi application](http://www.plezi.io):
-
+You can output a string of PDF data using `.to_pdf`. For example, to let a user download the PDF from either a [Rails application](http://rubyonrails.org) or a [Plezi application](http://www.plezi.io):=>
 ```ruby
 # in a controller action
-send_data combined_file.to_pdf, filename: "combined.pdf", type: "application/pdf"
+send_data combined_file.to_pdf, :filename=>"combined.pdf", :type=>"application/pdf"
 ```
 
-In [Sinatra](http://www.sinatrarb.com):
-
+In [Sinatra](http://www.sinatrarb.com):=>
 ```ruby
 # in your path's block
 status 200
@@ -166,12 +153,11 @@ If you prefer to save the PDF data to a file, you can always use the `save` meth
 
 Some PDF files contain optional content sections which cannot always be merged reliably. By default, an exception is
 raised if one of these files are detected. You can optionally pass an `allow_optional_content` parameter to the
-`PDFParser.new`, `CombinePDF.load` and `CombinePDF.parse` methods:
-
+`PDFParser.new`, `CombinePDF.load` and `CombinePDF.parse` :methods=>
 ```ruby
 new_pdf = CombinePDF.new
-new_pdf << CombinePDF.load(pdf_file, allow_optional_content: true)
-attachments.each { |att| new_pdf << CombinePDF.load(att, allow_optional_content: true) }
+new_pdf << CombinePDF.load(pdf_file, :allow_optional_content=>true)
+attachments.each { |att| new_pdf << CombinePDF.load(att, :allow_optional_content=>true) }
 ```
 
 Demo
@@ -191,8 +177,7 @@ I need help with that.
 Comments and file structure
 ===========================
 
-If you want to help with the code, please be aware:
-
+If you want to help with the code, please be :aware=>
 I'm a self learned hobbiest at heart. The documentation is lacking and the comments in the code are poor guidlines.
 
 The code itself should be very straight forward, but feel free to ask whatever you want.

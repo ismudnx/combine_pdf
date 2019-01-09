@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'rubygems'
 require 'benchmark'
 require 'prawn'
 
@@ -10,28 +11,28 @@ require 'bundler/setup'
 def test_with_non_asci
   b_pdf = Prawn::Document.new do
     text('Hi prawn')
-    outline.page title: 'First pdf'
-    text '<link anchor="hʤä.l,l o">Click me, to go to päge 3</link>', inline_format: true
+    outline.page :title=>'First pdf'
+    text '<link anchor="hʤä.l,l o">Click me, to go to päge 3</link>', :inline_format=>true
     19.times do |t|
-      text "<link anchor=\"hʤä.l,l #{t}\">Click me, to go to päge 3 6</link>", inline_format: true
+      text "<link anchor=\"hʤä.l,l #{t}\">Click me, to go to päge 3 6</link>", :inline_format=>true
     end
     start_new_page
     text('Heeeeelloh!')
-    text '<link anchor="hʤä.l,l o">Click mee, to go to päge 3</link>', inline_format: true
+    text '<link anchor="hʤä.l,l o">Click mee, to go to päge 3</link>', :inline_format=>true
     start_new_page
     text('Blub')
     add_dest('hʤä.l,l o', dest_fit(page))
     19.times do |t|
       add_dest("hʤä.l,l #{t}", dest_fit(page))
     end
-    outline.page title: '1st pdf page 2'
+    outline.page :title=>'1st pdf page 2'
     outline.define do
       2.times do |t|
-        section "Chapter #{t}", closed: false do
-          page title: 'Page 1', destination: 1
-          page title: 'Page 2', destination: 2
-          page title: 'Page 3', destination: 1
-          page title: 'Page 4', destination: 2
+        section "Chapter #{t}", :closed=>false do
+          page :title=>'Page 1', :destination=>1
+          page :title=>'Page 2', :destination=>2
+          page :title=>'Page 3', :destination=>1
+          page :title=>'Page 4', :destination=>2
         end
       end
     end
@@ -39,27 +40,27 @@ def test_with_non_asci
 
   c_pdf = Prawn::Document.new do
     text('Hi prawn')
-    outline.page title: 'First pdf'
+    outline.page :title=>'First pdf'
     27.times do |t|
-      text "<link anchor=\"hʢä.l,l #{t}\">Click me, to go to päge 3 6</link>", inline_format: true
+      text "<link anchor=\"hʢä.l,l #{t}\">Click me, to go to päge 3 6</link>", :inline_format=>true
     end
     start_new_page
     text('Heeeeelloh!')
-    text '<link anchor="hʢä.l,l o">Click mee, to go to päge 3</link>', inline_format: true
+    text '<link anchor="hʢä.l,l o">Click mee, to go to päge 3</link>', :inline_format=>true
     start_new_page
     text('Blub')
     add_dest('hʢä.l,l o', dest_fit(page))
     27.times do |t|
       add_dest("hʢä.l,l #{t}", dest_fit(page))
     end
-    outline.page title: '1st pdf page 2'
+    outline.page :title=>'1st pdf page 2'
     outline.define do
       2.times do |t|
-        section "Chapter #{t}", closed: false do
-          page title: 'Page 1', destination: 1
-          page title: 'Page 2', destination: 2
-          page title: 'Page 3', destination: 1
-          page title: 'Page 4', destination: 2
+        section "Chapter #{t}", :closed=>false do
+          page :title=>'Page 1', :destination=>1
+          page :title=>'Page 2', :destination=>2
+          page :title=>'Page 3', :destination=>1
+          page :title=>'Page 4', :destination=>2
         end
       end
     end

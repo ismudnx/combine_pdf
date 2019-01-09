@@ -1,4 +1,4 @@
-# -*- encoding : utf-8 -*-
+# -*- encoding :=>utf-8 -*-
 ########################################################
 ## Thoughts from reading the ISO 32000-1:2008
 ## this file is part of the CombinePDF library and the code
@@ -86,21 +86,21 @@ module CombinePDF
 
       # build new Pages object
       page_object_kids = [].dup
-      pages_object = { Type: :Pages, Count: page_list.length, Kids: page_object_kids }
-      pages_object_reference = { referenced_object: pages_object, is_reference_only: true }
-      page_list.each { |pg| pg[:Parent] = pages_object_reference; page_object_kids << ({ referenced_object: pg, is_reference_only: true }) }
+      pages_object = { :Type=>:Pages, :Count=>page_list.length, :Kids=>page_object_kids }
+      pages_object_reference = { :referenced_object=>pages_object, :is_reference_only=>true }
+      page_list.each { |pg| pg[:Parent] = pages_object_reference; page_object_kids << ({ :referenced_object=>pg, :is_reference_only=>true }) }
 
       # rebuild/rename the names dictionary
       rebuild_names
       # build new Catalog object
-      catalog_object = { Type: :Catalog,
-                         Pages: { referenced_object: pages_object, is_reference_only: true } }
-      # pages_object[:Parent] = { referenced_object: catalog_object, is_reference_only: true } # causes AcrobatReader to fail
+      catalog_object = { :Type=>:Catalog,
+                         :Pages=>{ :referenced_object=>pages_object, :is_reference_only=>true } }
+      # pages_object[:Parent] = { :referenced_object=>catalog_object, :is_reference_only=>true } # causes AcrobatReader to fail
       catalog_object[:ViewerPreferences] = @viewer_preferences unless @viewer_preferences.empty?
 
       # point old Pages pointers to new Pages object
       ## first point known pages objects - enough?
-      pages.each { |p| p[:Parent] = { referenced_object: pages_object, is_reference_only: true } }
+      pages.each { |p| p[:Parent] = { :referenced_object=>pages_object, :is_reference_only=>true } }
       ## or should we, go over structure? (fails)
       # each_object {|obj| obj[:Parent][:referenced_object] = pages_object if obj.is_a?(Hash) && obj[:Parent].is_a?(Hash) && obj[:Parent][:referenced_object] && obj[:Parent][:referenced_object][:Type] == :Pages}
 
@@ -118,7 +118,7 @@ module CombinePDF
       if @forms_data.nil? || @forms_data.empty?
         @forms_data = nil
       else
-        @forms_data = { referenced_object: (@forms_data[:referenced_object] || @forms_data), is_reference_only: true }
+        @forms_data = { :referenced_object=>(@forms_data[:referenced_object] || @forms_data), :is_reference_only=>true }
         catalog_object[:AcroForm] = @forms_data
         @objects << @forms_data[:referenced_object]
       end
@@ -126,12 +126,12 @@ module CombinePDF
       # add the names dictionary
       if @names && @names.length > 1
         @objects << @names
-        catalog_object[:Names] = { referenced_object: @names, is_reference_only: true }
+        catalog_object[:Names] = { :referenced_object=>@names, :is_reference_only=>true }
       end
       # add the outlines dictionary
       if @outlines && @outlines.any?
         @objects << @outlines
-        catalog_object[:Outlines] = { referenced_object: @outlines, is_reference_only: true }
+        catalog_object[:Outlines] = { :referenced_object=>@outlines, :is_reference_only=>true }
       end
 
       catalog_object
@@ -200,8 +200,8 @@ module CombinePDF
             if pos[0].is_a? String
               (pos.length / 2).times do |i|
                 dic << (pos[i * 2].clear << base.next!)
-                pos[(i * 2) + 1][0] = {is_reference_only: true, referenced_object: pages[pos[(i * 2) + 1][0]]} if(pos[(i * 2) + 1].is_a?(Array) && pos[(i * 2) + 1][0].is_a?(Numeric))
-                dic << (pos[(i * 2) + 1].is_a?(Array) ? { is_reference_only: true, referenced_object: { indirect_without_dictionary: pos[(i * 2) + 1] } } : pos[(i * 2) + 1])
+                pos[(i * 2) + 1][0] = {:is_reference_only=>true, :referenced_object=>pages[pos[(i * 2) + 1][0]]} if(pos[(i * 2) + 1].is_a?(Array) && pos[(i * 2) + 1][0].is_a?(Numeric))
+                dic << (pos[(i * 2) + 1].is_a?(Array) ? { :is_reference_only=>true, :referenced_object=>{ :indirect_without_dictionary=>pos[(i * 2) + 1] } } : pos[(i * 2) + 1])
                 # dic << pos[(i * 2) + 1]
               end
             else
@@ -215,10 +215,10 @@ module CombinePDF
           end
           resolved << pos.object_id
         end
-        return { referenced_object: { Names: dic }, is_reference_only: true }
+        return { :referenced_object=>{ :Names=>dic }, :is_reference_only=>true }
       end
       @names ||= @names[:referenced_object]
-      new_names = { Type: :Names }.dup
+      new_names = { :Type=>:Names }.dup
       POSSIBLE_NAME_TREES.each do |ntree|
         if @names[ntree]
           new_names[ntree] = rebuild_names(@names[ntree], base)
@@ -251,7 +251,7 @@ module CombinePDF
     # @private
     # JRuby Alternative this method reviews a Hash and updates it by merging Hash data,
     # preffering the new over the old.
-    HASH_MERGE_NEW_NO_PAGE = Proc.new do |_key = nil, old_data = nil, new_data = nil|
+    HASH_MERGE_NEW_NO_PAGE = Proc.new do |_key ,old_data ,new_data|
       if !new_data
         old_data
       elsif !old_data
@@ -282,12 +282,10 @@ module CombinePDF
     #            This method only differentiates between inserted at the beginning, or not.
     #            Not at the beginning, means the new outline will be added to the end of the original outline.
     # An outline base node (tree base) has :Type, :Count, :First, :Last
-    # Every node within the outline base node's :First or :Last can have also have the following pointers to other nodes:
-    # :First or :Last (only if the node has a subtree / subsection)
+    # Every node within the outline base node's :First or :Last can have also have the following pointers to other :nodes=>    # :First or :Last (only if the node has a subtree / subsection)
     # :Parent (the node's parent)
     # :Prev, :Next (previous and next node)
-    # Non-node-pointer data in these nodes:
-    # :Title - the node's title displayed in the PDF outline
+    # Non-node-pointer data in these :nodes=>    # :Title - the node's title displayed in the PDF outline
     # :Count - Number of nodes in it's subtree (0 if no subtree)
     # :Dest  - node link destination (if the node is linking to something)
     def merge_outlines(old_data, new_data, position)
@@ -313,10 +311,10 @@ module CombinePDF
         prev = nil
         pos = first = actual_object((position.nonzero? ? old_data : new_data)[:First])
         last = actual_object((position.nonzero? ? new_data : old_data)[:Last])
-        median = { is_reference_only: true, referenced_object: actual_object((position.nonzero? ? new_data : old_data)[:First]) }
-        old_data[:First] = { is_reference_only: true, referenced_object: first }
-        old_data[:Last] = { is_reference_only: true, referenced_object: last }
-        parent = { is_reference_only: true, referenced_object: old_data }
+        median = { :is_reference_only=>true, :referenced_object=>actual_object((position.nonzero? ? new_data : old_data)[:First]) }
+        old_data[:First] = { :is_reference_only=>true, :referenced_object=>first }
+        old_data[:Last] = { :is_reference_only=>true, :referenced_object=>last }
+        parent = { :is_reference_only=>true, :referenced_object=>old_data }
         while pos
           # walking through old_data here and updating the :Parent as we go,
           # this updates the inserted new_data :Parent's as well once it is appended and the
@@ -326,7 +324,7 @@ module CombinePDF
           # if there is no :Next, the end of the outline base node's :First is reached and this is
           # where the new data gets appended, the same way you would append to a two-way linked list.
           if pos[:Next].nil?
-            median[:referenced_object][:Prev] = { is_reference_only: true, referenced_object: prev } if median
+            median[:referenced_object][:Prev] = { :is_reference_only=>true, :referenced_object=>prev } if median
             pos[:Next] = median
             # midian becomes 'nil' because this loop keeps going after the appending is done,
             # to update the parents of the appended tree and we wouldn't want to keep appending it infinitely.
@@ -349,7 +347,8 @@ module CombinePDF
     # outline - outline hash
     # file    - "filename.filetype" string
     def print_outline_to_file(outline, file)
-      outline_subbed_str = outline.to_s.gsub(/\:raw_stream_content=\>"(?:(?!"}).)*+"\}\}/, ':raw_stream_content=> RAW STREAM}}')
+      # outline_subbed_str = outline.to_s.gsub(/\:raw_stream_content=\>"(?:(?!"}).)*+"\}\}/, ':raw_stream_content=> RAW STREAM}}')
+      outline_subbed_str = outline.to_s.gsub(/\:raw_stream_content=\>"(?:(?!"\}).)*"\}\}/, ':raw_stream_content=> RAW STREAM}}')
       brace_cnt = 0
       formatted_outline_str = ''
       outline_subbed_str.each_char do |c|

@@ -1,4 +1,4 @@
-# -*- encoding : utf-8 -*-
+# -*- encoding :=>utf-8 -*-
 
 module CombinePDF
   module_function
@@ -8,7 +8,7 @@ module CombinePDF
   def load(file_name = '', options = {})
     raise TypeError, "couldn't parse data, expecting type String" unless file_name.is_a?(String) || file_name.is_a?(Pathname)
     return PDF.new if file_name == ''
-    PDF.new(PDFParser.new(IO.read(file_name, mode: 'rb').force_encoding(Encoding::ASCII_8BIT), options))
+    PDF.new(PDFParser.new(IO.read(file_name), options))
   end
 
   # creats a new PDF object.
@@ -62,8 +62,7 @@ module CombinePDF
   #
   # the main intended use of this method is to create indexes (a table of contents) for merged data.
   #
-  # example:
-  #   pdf = CombinePDF.create_table headers: ["header 1", "another header"], table_data: [ ["this is one row", "with two columns"] , ["this is another row", "also two columns", "the third will be ignored"] ]
+  # :example=>  #   pdf = CombinePDF.create_table :headers=>["header 1", "another header"], :table_data=>[ ["this is one row", "with two columns"] , ["this is another row", "also two columns", "the third will be ignored"] ]
   #   pdf.save "table_file.pdf"
   #
   # accepts a Hash with any of the following keys as well as any of the Page_Methods#textbox options:
@@ -118,7 +117,7 @@ module CombinePDF
   # * scaling will be applied after the transformation is applied.
   #
   def calc_ctm(parameters)
-    p = { deg: 0, tx: 0, ty: 0, sx: 1, sy: 1 }.merge parameters
+    p = { :deg=>0, :tx=>0, :ty=>0, :sx=>1, :sy=>1 }.merge parameters
     r = p[:deg] * Math::PI / 180
     s = Math.sin(r)
     c = Math.cos(r)

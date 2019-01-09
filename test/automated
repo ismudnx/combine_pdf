@@ -80,15 +80,15 @@ pdf.save('07_named destinations.pdf')
 
 pdf = CombinePDF.new
 lists.each { |n| pdf << CombinePDF.load(n) }
-pdf.number_pages(start_at: 1,
-                           font_size: 14,
-                           font_color: [0, 0, 0.4],
-                           box_color: [0.8, 0.8, 0.8],
-                           border_width: 1,
-                           border_color: [0.3, 0.3, 0.3],
-                           box_radius: 8,
-                           number_location: [:top, :bottom],
-                           opacity: 0.75)
+pdf.number_pages(:start_at=> 1,
+                           :font_size=> 14,
+                           :font_color=> [0, 0, 0.4],
+                           :box_color=> [0.8, 0.8, 0.8],
+                           :border_width=> 1,
+                           :border_color=> [0.3, 0.3, 0.3],
+                           :box_radius=> 8,
+                           :number_location=> [:top, :bottom],
+                           :opacity=> 0.75)
 
 pdf.save('07_named destinations_numbered.pdf')
 
@@ -115,7 +115,7 @@ encrypted.length.times do |i|
     if(i == 0)
       puts "CombinePDF expected to fail to read AESv2 #{fname}"
     else
-      puts "ERROR: CombinePDF failed to open #{fname}"
+      puts ":ERROR=> CombinePDF failed to open #{fname}"
     end
   end
 end
