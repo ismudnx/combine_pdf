@@ -130,9 +130,14 @@ load 'combine_pdf/version.rb'
 module CombinePDF
 end
 
+# Patch to support some new methods
 class String
   def force_encoding(enc)
     self
+  end
+
+  def clear
+    replace ""
   end
 end
 #
