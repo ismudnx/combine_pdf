@@ -79,9 +79,11 @@ module CombinePDF
 
       # duplicate any non-unique pages - This is a special case to resolve Adobe Acrobat Reader issues (see issues #19 and #81)
       uniqueness = {}.dup
-      page_list.each { |page| page = page[:referenced_object] || page; page = page.dup if uniqueness[page.object_id]; uniqueness[page.object_id] = page }
+      page_order = []
+      page_list.each { |page| page = page[:referenced_object] || page; page = page.dup if uniqueness[page.object_id]; uniqueness[page.object_id] = page; page_order << page.object_id }
       page_list.clear
-      page_list = uniqueness.values
+      page_list = page_order.collect{|objid| uniqueness[objid]}
+      page_order.clear
       uniqueness.clear
 
       # build new Pages object
